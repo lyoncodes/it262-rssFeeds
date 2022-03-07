@@ -35,7 +35,7 @@ if(isset($_POST['auth'])) {
     $sql = "SELECT * FROM users WHERE username = '$username' AND userpassword = '$password'";
     $query = mysqli_query($conn, $sql);
     $results = mysqli_fetch_assoc($query);
-    var_dump($results);
+    header('Location:index.php');
   }
   
   if (count($results) > 0) {
