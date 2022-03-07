@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS category;
+DROP TABLE IF EXISTS feed;
+
 CREATE TABLE users(
   userID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(55) UNIQUE,
@@ -14,6 +18,7 @@ CREATE TABLE feed(
   title VARCHAR(255),
   URL VARCHAR(255)
 );
-INSERT INTO users VALUES(1, 'meanchael', 'p@ssword');
+
+INSERT INTO users VALUES(1, 'ex_user', 'p@ssword');
 INSERT INTO category VALUES(1, 1, 'basketball');
 INSERT INTO feed VALUES(1, 1, 'reddit nba', 'http://inline-reddit.com/feed/?subreddit=nba');
