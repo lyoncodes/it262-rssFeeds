@@ -4,6 +4,9 @@ namespace NewsAggregator\Database;
 
 use \Exception;
 
+/**
+ * Database table Feed
+ */
 class Feed
 {
     public $feedID;
@@ -11,8 +14,20 @@ class Feed
     public $title;
     public $URL;
 
+
+    /**
+     * category
+     * the category which current feed belong to
+     * @var Category
+     */
     private $category;
 
+    /**
+     * findByID
+     *
+     * @param  $id
+     * @return Feed
+     */
     public static function findByID($id)
     {
         $SQL = "select * from feed where feedID = $id";

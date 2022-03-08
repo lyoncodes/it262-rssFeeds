@@ -4,15 +4,37 @@ namespace NewsAggregator\Database;
 
 use \Exception;
 
+
+/**
+ * DataBase Table category
+ */
 class Category
 {
+
     public $categoryID;
     public $userID;
     public $title;
 
+
+    /**
+     * feeds
+     * the feeds which belong to current category
+     * @var array of Feed Class
+     */
     private $feeds;
+    /**
+     * user
+     * the User which current category belong to
+     * @var User
+     */
     private $user;
 
+    /**
+     * findByID
+     *
+     * @param   $id
+     * @return Category or null
+     */
     public static function findByID($id)
     {
         $SQL = "select * from category where categoryID = $id";
@@ -20,6 +42,12 @@ class Category
         return $entity;
     }
 
+    /**
+     * findByUserID
+     *
+     * @param   $id
+     * @return array of Category
+     */
     public static function findByUserID($id)
     {
         $SQL = "select * from category where userID = $id";
@@ -27,6 +55,12 @@ class Category
         return $entities;
     }
 
+    /**
+     * __get
+     *
+     * @param   $name
+     * @return array of Feeds or User
+     */
     public function __get($name)
     {
         if ($name == "feeds") {

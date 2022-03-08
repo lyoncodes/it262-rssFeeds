@@ -4,12 +4,20 @@ namespace NewsAggregator\Database;
 
 use \Exception;
 
+/**
+ * DataBase Table User
+ */
 class User
 {
     public $userID;
     public $username;
     public $userpassword;
 
+    /**
+     * categories
+     * the categories whiches belong to current user
+     * @var array of Category
+     */
     private $categories = null;
 
 
@@ -27,6 +35,12 @@ class User
         return $entity;
     }
 
+    /**
+     * __get
+     *
+     * @param $name
+     * @return array of Category class
+     */
     public function __get($name)
     {
         if ($name == "categories") {

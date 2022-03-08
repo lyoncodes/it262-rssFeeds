@@ -1,5 +1,7 @@
 <?php
 include_once "./config.php";
+
+//reference DBModel
 include_once "./DbModel/DB.php";
 
 use NewsAggregator\Database\User;
@@ -80,4 +82,4 @@ echo 'Feed URL is ' . $url . '<br/><br/>';
 // 2) Search the User information start from Feed
 $feed = Feed::findByID($feedID);
 $username = $feed->category->user->username;
-echo 'username is ' . $username;
+echo 'Username is ' . $username;
