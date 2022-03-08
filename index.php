@@ -1,7 +1,8 @@
 <?php
 include 'config.php';
 session_start();
-
+require '../inc_0700/config_inc.php';
+get_header();
 // if there is no username value in the session array, include user auth process
 if (!isset($_SESSION['username'])) {
   include 'login.php';
