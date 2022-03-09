@@ -9,19 +9,24 @@ session_start();
 
 // CORE LOGIC ==============
 
-function newDOMdoc($url, $list){
+function newDOMdoc($url, $title, $link, $items){
   $filepath = ''.$url.'.xml';
   $dom = new DOMDocument();
   $root  = $dom->createElement('feeds');
 
-    for($i = 0; $i < count($list); $i++) {
-      $title = $list[$i]->title;
-      $link = $list[$i]->link;
+    for($i = 0; $i < count($items); $i++) {
+      $title = $items[$i]->title;
+      $link = $items[$i]->link;
+
       $feed = $dom->createElement('feed');
+      
       $title = $dom->createElement('title', $title);
       $item = $dom->createElement('link', $link);
+      // $desc = $dom->createElement('description', $description);
+      
       $feed->appendChild($title);
       $feed->appendChild($item);
+      // $feed->appendChild($desc);
       $root->appendChild($feed);
   }
   
@@ -29,6 +34,7 @@ function newDOMdoc($url, $list){
   $dom->save($filepath);
   
   $_SESSION['cache'][$url] = $filepath;
+  var_dump($_SESSION['cache']);
 }
 
 function formatURL($strToParse){
@@ -42,14 +48,15 @@ function formatURL($strToParse){
 // EXECUTION SCRIPT ============
   
 // query the cache
-if (isset($_SESSION['cache']) && count($_SESSION['cache']) > 0) {
+if (isset($_SESSION['cache'])) {
   echo 'this is from the cache';
   echo '<br>';
-  foreach($_SESSION['cache'] as $name => $val){
+  foreach($_SESSION['cache'] as $name => $val) {
     $xml = simplexml_load_file($val);
+    echo '<h1>'.$name.'</h1>';
     foreach($xml as ${$name}){
       echo "
-        <p>{${$name}->title}</p><br>
+        <h3>{${$name}->title}</h3>
         <a href='{${$name}->link}'>{${$name}->link}</a><br>
       ";
     }
@@ -70,9 +77,9 @@ if (isset($_SESSION['cache']) && count($_SESSION['cache']) > 0) {
     $response = file_get_contents($url); // fetch xml data
     $xml = simplexml_load_string($response); //create readable xml
 
-    array_push($list, $xml->channel->item);
+    array_push($list, $xml->channel);
 
-    newDOMdoc($row["name"], $list);
+    newDOMdoc($row["name"], $xml->channel->title, $xml->channel->link, $xml->channel->item);
 
     echo '<h1>'.$xml->channel->title.'</h1>';
     foreach($xml->channel->item as $feedItem) {
