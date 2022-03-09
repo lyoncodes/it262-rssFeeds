@@ -1,63 +1,88 @@
 <?php
 include 'config.php';
 session_start();
-require '../inc_0700/config_inc.php';
-get_header();
-// if there is no username value in the session array, include user auth process
-if (!isset($_SESSION['username'])) {
-  include 'login.php';
+
+// INCLUDES FOR DEPLOYMENT ==============
+
+// require '../inc_0700/config_inc.php';
+// get_header();
+
+// CORE LOGIC ==============
+
+function newDOMdoc($url, $list){
+  $filepath = ''.$url.'.xml';
+  $dom = new DOMDocument();
+  $root  = $dom->createElement('feeds');
+
+    for($i = 0; $i < count($list); $i++) {
+      $title = $list[$i]->title;
+      $link = $list[$i]->link;
+      $feed = $dom->createElement('feed');
+      $title = $dom->createElement('title', $title);
+      $item = $dom->createElement('link', $link);
+      $feed->appendChild($title);
+      $feed->appendChild($item);
+      $root->appendChild($feed);
+  }
+  
+  $dom->appendChild($root);
+  $dom->save($filepath);
+  
+  $_SESSION['cache'][$url] = $filepath;
+}
+
+function formatURL($strToParse){
+  $strToParse = str_replace(' ', '+', $strToParse);
+  $base_uri = 'https://news.google.com/rss/search?q=&hl=en-US&gl=US&ceid=US:en';
+  $base_uri = str_replace('q=', 'q='.$strToParse.'', $base_uri);
+  
+  return $base_uri;
+}
+
+// EXECUTION SCRIPT ============
+  
+// query the cache
+if (isset($_SESSION['cache']) && count($_SESSION['cache']) > 0) {
+  echo 'this is from the cache';
+  echo '<br>';
+  foreach($_SESSION['cache'] as $name => $val){
+    $xml = simplexml_load_file($val);
+    foreach($xml as ${$name}){
+      echo "
+        <p>{${$name}->title}</p><br>
+        <a href='{${$name}->link}'>{${$name}->link}</a><br>
+      ";
+    }
+  }
 } else {
-  // else we're good to go
-  echo '<p>hello '.$_SESSION['username'].', your user id is: '. $_SESSION['id'].'</p>';
-  
-  // query the cache
-  if (isset($_SESSION['cache']) && count($_SESSION['cache']) > 0) {
-    echo 'this is from the cache';
-    echo '<br>';
-    foreach($_SESSION['cache'] as $cached){
-      // var_dump($_SESSION['cache']);
-      // echo '<br>';
-      echo '<pre>'.var_dump($cached).'</pre>';
-      // print '<h1>' . $cached->channel->title . '</h1>';
-      // foreach($cached->channel->item as $story)
-      // {
-      //   echo '<a href="' . $story->link . '">' . $story->title . '</a><br />'; 
-      //   echo '<p>' . $story->description . '</p><br /><br />';
-      // }
-    }
-  } else {
-    // if no cache hit...
-    
-    // make a round trip to the server
-    $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-    $query = "SELECT f.URL, f.title FROM category c JOIN feed f ON c.categoryID = f.categoryID WHERE c.userID = ";
-    $query .= $_SESSION['id'];
+  // if no cache hit...
+  // make a round trip to the server
+  $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+  $query = "SELECT f.name FROM category c JOIN feed f ON c.categoryID = f.categoryID";
 
-    $res = mysqli_query($conn, $query);
-    
-    while ($row = mysqli_fetch_assoc($res)){
-      $response = file_get_contents($row['URL']);
-      $xml = simplexml_load_string($response);
-      foreach($xml->channel->item as $feedItem) {
-        // echo $feedItem->link;
-        echo '<br>';
-        echo '<h1>'.$feedItem->title.'</h1>';
-        echo '<br>';
-        echo $feedItem->description;
-        echo '<br>';
-        $_SESSION['cache'][] = $feedItem->asXML();
-      }
-    }
-
-    // foreach($_SESSION['cache'] as $cached){
-    //   print '<h1>' . $cached->channel->title . '</h1>';
-    //   foreach($cached->channel->item as $story)
-    //   {
-    //     echo '<a href="' . $story->link . '">' . $story->title . '</a><br />'; 
-    //     echo '<p>' . $story->description . '</p><br /><br />';
-    //   }
-    // }
+  $res = mysqli_query($conn, $query);
   
+  $list = array();
+  
+  while ($row = mysqli_fetch_assoc($res)){
+    $url = formatURL($row["name"]); // parse row["name"], replacing spaces with +
+    
+    $response = file_get_contents($url); // fetch xml data
+    $xml = simplexml_load_string($response); //create readable xml
+
+    array_push($list, $xml->channel->item);
+
+    newDOMdoc($row["name"], $list);
+
+    echo '<h1>'.$xml->channel->title.'</h1>';
+    foreach($xml->channel->item as $feedItem) {
+      echo '<h3>'.$feedItem->title.'</h3>';
+      echo '<br>';
+      echo $feedItem->link;
+      echo '<br>';
+      echo $feedItem->description;
+      echo '<br>';
+    }
   }
 }
 
