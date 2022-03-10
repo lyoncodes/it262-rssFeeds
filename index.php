@@ -2,7 +2,7 @@
 namespace NewsAggregator\Database;
 include_once 'DbModel/DB.php';
 
-// include 'config.php';
+include 'config.php';
 
 $db = new namespace\DB;
 $category = new namespace\Category;
@@ -11,8 +11,8 @@ session_start();
 
 // INCLUDES FOR DEPLOYMENT ==============
 
-require '../inc_0700/config_inc.php';
-get_header();
+// require '../inc_0700/config_inc.php';
+// get_header();
 // CORE LOGIC ==============
 
 function newDOMdoc($url, $title, $link, $items){
@@ -34,7 +34,7 @@ function newDOMdoc($url, $title, $link, $items){
   foreach($items as $item => $val){
     $story = $dom->createElement('story');
     
-    $title = $dom->createElement('title', $val->title);
+    $title = $dom->createElement('title', htmlspecialchars($val->title));
     $story->appendChild($title);
     
     $description = $dom->createElement('description');
@@ -63,20 +63,20 @@ function formatURL($strToParse){
 // EXECUTION SCRIPT ============
   
 // query the cache
-// if (isset($_SESSION['cache'])) {
-//   echo 'this is from the cache';
-//   echo '<br>';
-//   foreach($_SESSION['cache'] as $name => $val) {
-//     $xml = simplexml_load_file($val);
-//     echo '<h1>'.$name.'</h1>';
-//     foreach($xml->feed->story as $story){
-//       echo "
-//         <h3>$story->title}</h3><br>
-//         $story->description
-//       ";
-//     }
-//   }
-// } else {
+if (isset($_SESSION['cache'])) {
+  echo 'this is from the cache';
+  echo '<br>';
+  foreach($_SESSION['cache'] as $name => $val) {
+    $xml = simplexml_load_file($val);
+    echo '<h1>'.$name.'</h1>';
+    foreach($xml->feed->story as $story){
+      echo "
+        <h3>$story->title}</h3><br>
+        $story->description
+      ";
+    }
+  }
+} else {
   // if no cache hit...
   // make a round trip to the server
   $query = "SELECT f.name FROM category c JOIN feed f ON c.categoryID = f.categoryID";
@@ -111,6 +111,6 @@ function formatURL($strToParse){
       ';
     }
   }
-// }
+}
 
 
