@@ -1,17 +1,23 @@
 <?php
-include 'config.php';
+namespace NewsAggregator\Database;
+include_once 'DbModel/DB.php';
+
+// include 'config.php';
+
+$db = new namespace\DB;
+$category = new namespace\Category;
+
 session_start();
 
 // INCLUDES FOR DEPLOYMENT ==============
 
-// require '../inc_0700/config_inc.php';
-// get_header();
-
+require '../inc_0700/config_inc.php';
+get_header();
 // CORE LOGIC ==============
 
 function newDOMdoc($url, $title, $link, $items){
-  $filepath = ''.$url.'.xml';
-  $dom = new DOMDocument();
+  $filepath = 'cache/'.$url.'.xml';
+  $dom = new \DOMDocument();
   
   $root  = $dom->createElement('feeds');
   $feed = $dom->createElement('feed');
@@ -73,24 +79,36 @@ if (isset($_SESSION['cache'])) {
 } else {
   // if no cache hit...
   // make a round trip to the server
-  $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
   $query = "SELECT f.name FROM category c JOIN feed f ON c.categoryID = f.categoryID";
-
-  $res = mysqli_query($conn, $query);
   
-  while ($row = mysqli_fetch_assoc($res)){
-    $url = formatURL($row["name"]); // parse row["name"], replacing spaces with +
-    
+  $res = $db::Query($query, 'Feed');
+
+  foreach($res as $item) {
+    $url = formatURL($item->name); // parse names, replacing spaces with +
     $response = file_get_contents($url); // fetch xml data
     $xml = simplexml_load_string($response); //create readable xml
-    
-    newDOMdoc($row["name"], $xml->channel->title, $xml->channel->link, $xml->channel->item);
+    newDOMdoc($item->name, $xml->channel->title, $xml->channel->link, $xml->channel->item);
 
-    echo '<h1>'.$xml->channel->title.'</h1>';
+    echo '<h3 align="center">'.$item->name.'</h3>';
     foreach($xml->channel->item as $feedItem) {
-      echo '<h3>'.$feedItem->title.'</h3>';
-      echo '<p>'.$feedItem->link.'</p>';
-      echo '<p>'.$feedItem->description.'</p>';
+      echo '
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>'.$xml->channel->title.'</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>
+              <a href="'.$feedItem->link.'">'.$feedItem->title.'</a>
+            </th>
+            <td>
+              '.$feedItem->description.'
+            </td>
+          </tr>
+        </tbody>
+      ';
     }
   }
 }
