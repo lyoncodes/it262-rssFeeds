@@ -63,20 +63,20 @@ function formatURL($strToParse){
 // EXECUTION SCRIPT ============
   
 // query the cache
-if (isset($_SESSION['cache'])) {
-  echo 'this is from the cache';
-  echo '<br>';
-  foreach($_SESSION['cache'] as $name => $val) {
-    $xml = simplexml_load_file($val);
-    echo '<h1>'.$name.'</h1>';
-    foreach($xml->feed->story as $story){
-      echo "
-        <h3>$story->title}</h3><br>
-        $story->description
-      ";
-    }
-  }
-} else {
+// if (isset($_SESSION['cache'])) {
+//   echo 'this is from the cache';
+//   echo '<br>';
+//   foreach($_SESSION['cache'] as $name => $val) {
+//     $xml = simplexml_load_file($val);
+//     echo '<h1>'.$name.'</h1>';
+//     foreach($xml->feed->story as $story){
+//       echo "
+//         <h3>$story->title}</h3><br>
+//         $story->description
+//       ";
+//     }
+//   }
+// } else {
   // if no cache hit...
   // make a round trip to the server
   $query = "SELECT f.name FROM category c JOIN feed f ON c.categoryID = f.categoryID";
@@ -111,6 +111,6 @@ if (isset($_SESSION['cache'])) {
       ';
     }
   }
-}
+// }
 
 

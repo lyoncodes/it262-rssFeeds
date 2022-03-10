@@ -10,7 +10,7 @@ class Feed
 {
     public $feedID;
     public $categoryID;
-    public $title;
+    public $name;
 
 
     /**
