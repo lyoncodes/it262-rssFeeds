@@ -12,29 +12,38 @@ session_start();
 function newDOMdoc($url, $title, $link, $items){
   $filepath = ''.$url.'.xml';
   $dom = new DOMDocument();
+  
   $root  = $dom->createElement('feeds');
-
-    for($i = 0; $i < count($items); $i++) {
-      $title = $items[$i]->title;
-      $link = $items[$i]->link;
-
-      $feed = $dom->createElement('feed');
-      
-      $title = $dom->createElement('title', $title);
-      $item = $dom->createElement('link', $link);
-      // $desc = $dom->createElement('description', $description);
-      
-      $feed->appendChild($title);
-      $feed->appendChild($item);
-      // $feed->appendChild($desc);
-      $root->appendChild($feed);
+  $feed = $dom->createElement('feed');
+  $description = $dom->createElement('description');
+  $title = $dom->createElement('title', $title);
+  $href = $dom->createElement('link');
+  
+  $item = $dom->createTextNode($link);
+  $href->appendChild($item);
+  
+  $feed->appendChild($title);
+  $feed->appendChild($href);
+  
+  foreach($items as $item => $val){
+    $story = $dom->createElement('story');
+    
+    $title = $dom->createElement('title', $val->title);
+    $story->appendChild($title);
+    
+    $description = $dom->createElement('description');
+    $desc = $dom->createTextNode($val->description);
+    $description->appendChild($desc);
+    $story->appendChild($description);
+    
+    $feed->appendChild($story);
+    $root->appendChild($feed);
   }
   
   $dom->appendChild($root);
   $dom->save($filepath);
   
   $_SESSION['cache'][$url] = $filepath;
-  var_dump($_SESSION['cache']);
 }
 
 function formatURL($strToParse){
@@ -54,10 +63,10 @@ if (isset($_SESSION['cache'])) {
   foreach($_SESSION['cache'] as $name => $val) {
     $xml = simplexml_load_file($val);
     echo '<h1>'.$name.'</h1>';
-    foreach($xml as ${$name}){
+    foreach($xml->feed->story as $story){
       echo "
-        <h3>{${$name}->title}</h3>
-        <a href='{${$name}->link}'>{${$name}->link}</a><br>
+        <h3>$story->title}</h3><br>
+        $story->description
       ";
     }
   }
@@ -69,26 +78,19 @@ if (isset($_SESSION['cache'])) {
 
   $res = mysqli_query($conn, $query);
   
-  $list = array();
-  
   while ($row = mysqli_fetch_assoc($res)){
     $url = formatURL($row["name"]); // parse row["name"], replacing spaces with +
     
     $response = file_get_contents($url); // fetch xml data
     $xml = simplexml_load_string($response); //create readable xml
-
-    array_push($list, $xml->channel);
-
+    
     newDOMdoc($row["name"], $xml->channel->title, $xml->channel->link, $xml->channel->item);
 
     echo '<h1>'.$xml->channel->title.'</h1>';
     foreach($xml->channel->item as $feedItem) {
       echo '<h3>'.$feedItem->title.'</h3>';
-      echo '<br>';
-      echo $feedItem->link;
-      echo '<br>';
-      echo $feedItem->description;
-      echo '<br>';
+      echo '<p>'.$feedItem->link.'</p>';
+      echo '<p>'.$feedItem->description.'</p>';
     }
   }
 }
