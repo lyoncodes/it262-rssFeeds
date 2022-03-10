@@ -21,10 +21,9 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 
 
 
-$config->titleTag = 'Surveys made with love & PHP in Seattle';
-
-$config->metaDescription = 'Seattle Central\'s IT262 Class Surveys are made with pure PHP! ' . $config->metaDescription;
-$config->metaKeywords = 'surveys,PHP' . $config->metaKeywords;
+$config->titleTag = 'Login RSS';
+$config->metaDescription = 'Login Form for RSS';
+$config->metaKeywords = 'Login Form for RSS';
 
 //adds font awesome icons for arrows on pager
 $config->loadhead .= '<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>';
