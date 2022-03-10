@@ -3,7 +3,6 @@
 namespace NewsAggregator\Database;
 
 use \Exception;
-
 /**
  * Database table Feed
  */
@@ -12,7 +11,6 @@ class Feed
     public $feedID;
     public $categoryID;
     public $title;
-    public $URL;
 
 
     /**
