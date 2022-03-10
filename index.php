@@ -1,11 +1,14 @@
 <?php
 namespace NewsAggregator\Database;
 include_once 'DbModel/DB.php';
+include 'src/newDomDoc.php';
 
 include 'config.php';
 
 $db = new namespace\DB;
 $category = new namespace\Category;
+
+use newDomDoc as cache;
 
 session_start();
 
@@ -15,42 +18,6 @@ session_start();
 // get_header();
 // CORE LOGIC ==============
 
-function newDOMdoc($url, $title, $link, $items){
-  $filepath = 'cache/'.$url.'.xml';
-  $dom = new \DOMDocument();
-  
-  $root  = $dom->createElement('feeds');
-  $feed = $dom->createElement('feed');
-  $description = $dom->createElement('description');
-  $title = $dom->createElement('title', $title);
-  $href = $dom->createElement('link');
-  
-  $item = $dom->createTextNode($link);
-  $href->appendChild($item);
-  
-  $feed->appendChild($title);
-  $feed->appendChild($href);
-  
-  foreach($items as $item => $val){
-    $story = $dom->createElement('story');
-    
-    $title = $dom->createElement('title', htmlspecialchars($val->title));
-    $story->appendChild($title);
-    
-    $description = $dom->createElement('description');
-    $desc = $dom->createTextNode($val->description);
-    $description->appendChild($desc);
-    $story->appendChild($description);
-    
-    $feed->appendChild($story);
-    $root->appendChild($feed);
-  }
-  
-  $dom->appendChild($root);
-  $dom->save($filepath);
-  
-  $_SESSION['cache'][$url] = $filepath;
-}
 
 function formatURL($strToParse){
   $strToParse = str_replace(' ', '+', $strToParse);
@@ -95,17 +62,14 @@ if (isset($_SESSION['cache'])) {
       <table class="table table-hover">
         <thead>
           <tr>
-            <th>'.$xml->channel->title.'</th>
+            <th><h4>'.$feedItem->title.'<h4></th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <th>
-              <a href="'.$feedItem->link.'">'.$feedItem->title.'</a>
+              <a href="'.$feedItem->link.'">'.$feedItem->source.'</a>
             </th>
-            <td>
-              '.$feedItem->description.'
-            </td>
           </tr>
         </tbody>
       ';

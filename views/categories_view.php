@@ -16,21 +16,6 @@ get_header();
 $result = Category::findByUserID(1);
 $feed1 = Feed::findByCategoryID(1);
 
-
-// var_dump($result);
-// echo 'hello wwww';
-
-// foreach($result as $category) {
-
-//     echo $category->title;
-
-// }
-
-// foreach($feed1 as $feed => $val) {
-
-//     echo $val->name;
-
-// }
 for ($i = 0; $i < count($result); $i++) {
     echo '<h1>'.$result[$i]->title.'</h1>';
     $feed = Feed::findByCategoryID($i + 1);
