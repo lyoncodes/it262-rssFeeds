@@ -27,7 +27,11 @@ class User
         $entity = DB::Query($SQL, "User", true);
         return $entity;
     }
-
+    /**
+     * login
+     * 
+     * @return User
+     */
     public static function login($username, $userpassword)
     {
         $SQL = "select * from users where username='$username' and userpassword='$userpassword'";
