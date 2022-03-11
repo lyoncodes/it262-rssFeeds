@@ -38,7 +38,17 @@ class User
         $entity = DB::Query($SQL, "User", true);
         return $entity;
     }
-
+    /**
+     * signup
+     * 
+     * 
+     */
+    public static function signup($username, $password)
+    {
+        $SQL = "INSERT INTO users VALUES(NULL, '$username', '$password')";
+        $entity = DB::Insert($SQL, $username, $password);
+        return $entity;
+    }
     /**
      * __get
      *

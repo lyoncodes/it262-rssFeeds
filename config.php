@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 define('DB_NAME','g2_rssdb');
 define('DB_USER','group2_user');
 define('DB_PASSWORD','p@ssword');

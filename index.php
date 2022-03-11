@@ -14,14 +14,12 @@ include 'config.php';
 $db = new namespace\DB;
 // $category = new namespace\Category;
 
-session_start();
-
 // INCLUDES FOR DEPLOYMENT ==============
 
 // require '../inc_0700/config_inc.php';
 // get_header();
-// CORE LOGIC ==============
 
+// CORE LOGIC ==============
 
 function formatURL($strToParse){
   $strToParse = str_replace(' ', '+', $strToParse);
@@ -32,7 +30,16 @@ function formatURL($strToParse){
 }
 
 // EXECUTION SCRIPT ============
-include 'views/categories_view.php';
+// LOGIN LOGIC ==============
+if (!isset($_SESSION["username"]) && !isset($_SESSION["userID"])){
+  include 'login.php';
+} else {
+  $cat = Category::findByUserId($_SESSION["userID"]);
+  if (count($cat) == 0) {
+    echo 'hi';
+  }
+  include 'views/categories_view.php';
+}
 
 // query the cache
 // if (isset($_SESSION['cache'])) {
@@ -51,16 +58,16 @@ include 'views/categories_view.php';
 // } else {
   // if no cache hit...
   // make a round trip to the server to grab our categories, and cache the urls
-  $res = ($user->__get("categories"));
+  // $res = (Category::findByUserId($_SESSION["userID"]));
 
-  foreach($res as $item) {
-    $url = formatURL($item->title); // parse names, replacing spaces with +
-    $response = file_get_contents($url); // fetch xml data
-    $xml = simplexml_load_string($response); //create readable xml
+  // foreach($res as $item) {
+  //   $url = formatURL($item->title); // parse names, replacing spaces with +
+  //   $response = file_get_contents($url); // fetch xml data
+  //   $xml = simplexml_load_string($response); //create readable xml
     
-    DomDoc::newDocument($item->title, $xml->channel->title, $xml->channel->link, $xml->channel->item);
+  //   DomDoc::newDocument($item->title, $xml->channel->title, $xml->channel->link, $xml->channel->item);
 
-    echo '<h3 align="center">'.$item->title.'</h3>';
+  //   echo '<h3 align="center">'.$item->title.'</h3>';
     // foreach($xml->channel->item as $feedItem) {
     //   echo '
     //   <table class="table table-hover">
@@ -78,7 +85,7 @@ include 'views/categories_view.php';
     //     </tbody>
     //   ';
     // }
-  }
+  // }
 
 // }
 
