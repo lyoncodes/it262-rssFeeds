@@ -12,7 +12,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
   if ($user != null) {
     $_SESSION["username"] = $user->username;
     $_SESSION["userID"] = $user->userID;
-    header('Location:index.php');
+    header('Location:./views/categories_view.php');
     exit();
   } else {
     $showLoginError  = true;
