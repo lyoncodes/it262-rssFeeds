@@ -34,7 +34,7 @@ function newDOMdoc($url, $title, $link, $items){
   foreach($items as $item => $val){
     $story = $dom->createElement('story');
     
-    $title = $dom->createElement('title', $val->title);
+    $title = $dom->createElement('title', htmlspecialchars($val->title));
     $story->appendChild($title);
     
     $description = $dom->createElement('description');

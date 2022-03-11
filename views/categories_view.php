@@ -17,27 +17,21 @@ $result = Category::findByUserID(1);
 $feed1 = Feed::findByCategoryID(1);
 
 
-// var_dump($result);
-// echo 'hello wwww';
 
-// foreach($result as $category) {
-
-//     echo $category->title;
-
-// }
-
-// foreach($feed1 as $feed => $val) {
-
-//     echo $val->name;
-
-// }
+  echo '<div class="flex-container" style="display:flex; flex-direction:column; justify-content:space-around; flex-wrap:wrap; margin:0 auto;">';
 for ($i = 0; $i < count($result); $i++) {
-    echo '<h1>'.$result[$i]->title.'</h1>';
+    echo '<div class="flex-item" style="width:40%; margin:1em;">';
+    echo '<h1>'.ucfirst($result[$i]->title).'</h1>';
     $feed = Feed::findByCategoryID($i + 1);
+    echo '<ul>';
     foreach($feed as $key => $val) {
-      echo $val->name;
+      echo '<li style="font-weight:bold;">' . ucfirst($val->name) . '</li>';
     }
+    echo '</ul>';
+    echo '</div>'; //close flex-item
   }
+
+    echo '</div>'; // close flex-container
 
 
 ?>
