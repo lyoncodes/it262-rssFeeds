@@ -46,7 +46,7 @@ class User
     public static function signup($username, $password)
     {
         $SQL = "INSERT INTO users VALUES(NULL, '$username', '$password')";
-        $entity = DB::Insert($SQL, $username, $password);
+        $entity = DB::execute($SQL, $username, $password);
         return $entity;
     }
     /**

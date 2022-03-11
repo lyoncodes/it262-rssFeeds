@@ -1,6 +1,7 @@
 <?php
 namespace NewsAggregator\Database;
 
+include 'config.php';
 include_once 'DbModel/DB.php';
 include_once 'src/createXML.php';
 
@@ -9,7 +10,10 @@ use NewsAggregator\Database\Category;
 use NewsAggregator\Database\Feed;
 use NewsAggregator\Frontend\DomDoc;
 
-include 'config.php';
+if (session_status() == 1){
+  session_start();
+  print_r($_SESSION);
+};
 
 $db = new namespace\DB;
 // $category = new namespace\Category;
@@ -32,13 +36,30 @@ function formatURL($strToParse){
 // EXECUTION SCRIPT ============
 // LOGIN LOGIC ==============
 if (!isset($_SESSION["username"]) && !isset($_SESSION["userID"])){
-  include 'login.php';
+  header('Location:login.php');
 } else {
-  $cat = Category::findByUserId($_SESSION["userID"]);
-  if (count($cat) == 0) {
-    echo 'hi';
+  // fetch by ID
+  $fetched = Feed::findByID($_GET['fid']);
+  $url = formatURL($fetched->name); // parse names, replacing spaces with +
+  $response = file_get_contents($url); // fetch xml data
+  $xml = simplexml_load_string($response); //create readable xml
+  foreach($xml->channel->item as $feedItem) {
+  echo '
+    <table class="table table-hover">
+    <thead>
+      <tr>
+        <th><h4>'.$feedItem->title.'<h4></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>
+          <a href="'.$feedItem->link.'">'.$feedItem->source.'</a>
+        </th>
+      </tr>
+    </tbody>
+  ';
   }
-  include 'views/categories_view.php';
 }
 
 // query the cache

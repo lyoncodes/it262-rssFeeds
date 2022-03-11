@@ -3,6 +3,7 @@
 namespace NewsAggregator\Database;
 
 use \Exception;
+
 /**
  * Database table Feed
  */
@@ -12,7 +13,12 @@ class Feed
     public $categoryID;
     public $name;
 
-
+    function __construct($feedID = "", $categoryID = "", $name = "")
+    {
+        $this->feedID = $feedID;
+        $this->name = $name;
+        $this->categoryID = $categoryID;
+    }
     /**
      * category
      * the category which current feed belong to
@@ -49,5 +55,16 @@ class Feed
             return $this->category;
         }
         throw new Exception("Undefined property: Feed::$name");
+    }
+
+    public function save()
+    {
+        $sql = "";
+        if ($this->feedID !== "") {
+            $sql = "update feed set name ='$this->name' where feedID =$this->feedID";
+        } else {
+            $sql = "insert into feed(categoryID,name) values($this->categoryID,'$this->name')";
+        }
+        return DB::execute($sql);
     }
 }

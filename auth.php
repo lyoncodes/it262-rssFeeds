@@ -2,8 +2,6 @@
 
 use NewsAggregator\Database\User;
 
-include 'config.php';
-
 include "./DbModel/DB.php";
 
 $showSignUpError = false;

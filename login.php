@@ -1,7 +1,7 @@
 <?php
 
 // require '../inc_0700/config_inc.php';
-include 'config.php';
+require 'config.php';
 
 include_once "./DbModel/DB.php";
 
@@ -11,9 +11,10 @@ $showLoginError = false;
 if (isset($_POST["username"]) && isset($_POST["password"])) {
   $user = User::login($_POST["username"], $_POST["password"]);
   if ($user != null) {
+    session_start();
     $_SESSION["username"] = $user->username;
     $_SESSION["userID"] = $user->userID;
-    header('Location:index.php');
+    header('Location:views/categories_view.php');
     exit();
   } else {
     $showLoginError  = true;
