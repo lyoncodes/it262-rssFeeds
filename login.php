@@ -1,6 +1,7 @@
 <?php
 
-require '../inc_0700/config_inc.php';
+// require '../inc_0700/config_inc.php';
+include 'config.php';
 
 include "./DbModel/DB.php";
 
@@ -21,14 +22,14 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 
 
 
-$config->titleTag = 'Login RSS';
-$config->metaDescription = 'Login Form for RSS';
-$config->metaKeywords = 'Login Form for RSS';
+// $config->titleTag = 'Login RSS';
+// $config->metaDescription = 'Login Form for RSS';
+// $config->metaKeywords = 'Login Form for RSS';
 
 //adds font awesome icons for arrows on pager
-$config->loadhead .= '<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>';
+// $config->loadhead .= '<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>';
 
-get_header();
+// get_header();
 ?>
 <style>
   .wrapper {
@@ -156,6 +157,9 @@ get_header();
         <a href="#">Hint</a>
       </div>
       <input type="submit" value="Login" />
+      <div class="row">
+        <a href="auth.php">Create Account</a>
+      </div>
     </div>
   </form>
   <?php if ($showLoginError) : ?>
@@ -166,5 +170,5 @@ get_header();
 
 
 <?php
-get_footer();
+// get_footer();
 ?>
