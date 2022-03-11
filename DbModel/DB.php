@@ -45,4 +45,17 @@ class DB
         //for the view page return a entity
         return count($entities) > 0 ?  $entities[0] : null;
     }
+
+    public static function execute($sql)
+    {
+        $result =  array("succeed" => true, "errorMsg" => "");
+        $link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+        $stmt = mysqli_prepare($link, $sql);
+        if (!$stmt || !mysqli_stmt_execute($stmt)) {
+            $result["succeed"] = false;
+            $result["errorMsg"] = $link->error;
+        }
+        mysqli_close($link);
+        return $result;
+    }
 }
