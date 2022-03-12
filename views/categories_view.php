@@ -18,7 +18,7 @@ require '../config.php';
 if(namespace\helpers\check_session_status() !== PHP_SESSION_ACTIVE) session_start();
 
 //check user login
-namespace\helpers\validateUserSession() ? $_SESSION["lastPageLoad"] = new DateTime() : header('Location:login.php');
+namespace\helpers\validateUserSession() ? $_SESSION["lastPageLoad"] = "now" : header('Location:login.php');
 
 // $config->loadhead .= '<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>';
 // get_header();
@@ -46,7 +46,7 @@ $categories = Category::findByUserID($_SESSION["userID"]);
 
   <?php endif; ?>
 
-  <?php print_r($_SESSION["lastPageLoad"])?>
+  <!-- <?php print_r($_SESSION["lastPageLoad"])?> -->
   <?php foreach ($categories as $category) :
     $feeds = $category->feeds;
   ?>
