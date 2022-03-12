@@ -33,24 +33,6 @@ $url = formatURL($feed->name); // parse names, replacing spaces with +
 $response = file_get_contents($url); // fetch xml data
 $xml = simplexml_load_string($response); //create readable xml
 
-// foreach($xml->channel->item as $feedItem) {
-//   echo '
-//     <table class="table table-hover">
-//     <thead>
-//       <tr>
-//         <th><h4>'.$feedItem->title.'<h4></th>
-//       </tr>
-//     </thead>
-//     <tbody>
-//       <tr>
-//         <th>
-//           <a href="'.$feedItem->link.'">'.$feedItem->source.'</a>
-//         </th>
-//       </tr>
-//     </tbody>
-//   ';
-// }
-
 ?>
 <link rel="stylesheet" src="../styles/style.css">
 
