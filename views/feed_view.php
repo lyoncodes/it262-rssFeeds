@@ -5,9 +5,11 @@
 require '../config.php';
 
 include_once "../DbModel/DB.php";
+include_once "../src/formatURL.php";
 
 use NewsAggregator\Database\Category;
 use NewsAggregator\Database\Feed;
+use function NewsAggregator\Database\formatURL;
 
 // $config->loadhead .= '<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>';
 // get_header();
@@ -20,13 +22,13 @@ $showSaveAction = null;
 //   unset($_SESSION["saveSucceed"]);
 // }
 
-function formatURL($strToParse){
-  $strToParse = str_replace(' ', '+', $strToParse);
-  $base_uri = 'https://news.google.com/rss/search?q=&hl=en-US&gl=US&ceid=US:en';
-  $base_uri = str_replace('q=', 'q='.$strToParse.'', $base_uri);
+// function formatURL($strToParse){
+//   $strToParse = str_replace(' ', '+', $strToParse);
+//   $base_uri = 'https://news.google.com/rss/search?q=&hl=en-US&gl=US&ceid=US:en';
+//   $base_uri = str_replace('q=', 'q='.$strToParse.'', $base_uri);
   
-  return $base_uri;
-}
+//   return $base_uri;
+// }
 
 $feed = Feed::findByID($_GET['fid']);
 $url = formatURL($feed->name); // parse names, replacing spaces with +
