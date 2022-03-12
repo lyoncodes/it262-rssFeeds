@@ -1,8 +1,10 @@
 <?php
+namespace NewsAggregator\Database;
+
+include 'config.php';
+include "./DbModel/DB.php";
 
 use NewsAggregator\Database\User;
-
-include "./DbModel/DB.php";
 
 $showSignUpError = false;
 if (isset($_POST["username"]) && isset($_POST["password"])) {

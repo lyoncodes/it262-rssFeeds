@@ -15,6 +15,52 @@
   color: #fff;
 }
 
+.wrapper a {
+  font-size: 20px;
+}
+
+.wrapper ul li {
+  padding: 0px 8px;
+}
+
+.edit-action {
+  margin-left: 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.edit-action a {
+  color: #8e8e8e;
+}
+
+.edit-action:hover a {
+  color: #2fa4e7;
+}
+
+.add-action {
+  color: #52b052;
+}
+
+.myalert {
+  margin-top: 20px;
+  animation-name: myalert;
+  animation-duration: 3s;
+  animation-delay: 3s;
+  animation-fill-mode: forwards;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+  @keyframes myalert {
+    0% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
 .wrapper form {
   padding: 30px 20px 25px 20px;
 }
@@ -97,9 +143,4 @@
   border-radius: 5px;
   display: none;
   border: 1px solid #1995dc;
-}
-
-.error-msg {
-  text-align: center;
-  color: #c90909;
 }

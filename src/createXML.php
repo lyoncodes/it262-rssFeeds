@@ -1,5 +1,5 @@
 <?php
-namespace NewsAggregator\Frontend;
+namespace NewsAggregator\Database;
 
 class DomDoc
 {
@@ -63,3 +63,11 @@ class CacheDoc extends DomDoc
 {
   
 }
+// Under construction
+  // foreach($res as $item) {
+  //   $url = formatURL($item->title); // parse names, replacing spaces with +
+  //   $response = file_get_contents($url); // fetch xml data
+  //   $xml = simplexml_load_string($response); //create readable xml
+    
+  //   DomDoc::newDocument($item->title, $xml->channel->title, $xml->channel->link, $xml->channel->item);
+  // }
