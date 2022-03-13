@@ -45,7 +45,6 @@ class DB
         //for the view page return a entity
         return count($entities) > 0 ?  $entities[0] : null;
     }
-
     public static function execute($sql)
     {
         $result =  array("succeed" => true, "errorMsg" => "");

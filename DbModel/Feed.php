@@ -60,10 +60,11 @@ class Feed
     public function save()
     {
         $sql = "";
+        $name = str_replace("'", "\'", $this->name);
         if ($this->feedID !== "") {
-            $sql = "update feed set name ='$this->name' where feedID =$this->feedID";
+            $sql = "update feed set name ='$name' where feedID =$this->feedID";
         } else {
-            $sql = "insert into feed(categoryID,name) values($this->categoryID,'$this->name')";
+            $sql = "insert into feed(categoryID,name) values($this->categoryID,'$name')";
         }
         return DB::execute($sql);
     }
