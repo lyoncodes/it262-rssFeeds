@@ -1,17 +1,20 @@
 <?php
 
-// require '../inc_0700/config_inc.php';
-require 'config.php';
+require '../inc_0700/config_inc.php';
+// require 'config.php';
 
 include_once "./DbModel/DB.php";
+include_once './src/sessionStatus.php';
 
 use NewsAggregator\Database\User;
+use function NewsAggregator\helpers\check_session_status;
+// check session status
+!check_session_status() && session_start();
 
 $showLoginError = false;
 if (isset($_POST["username"]) && isset($_POST["password"])) {
   $user = User::login($_POST["username"], $_POST["password"]);
   if ($user != null) {
-    session_start();
     $_SESSION["username"] = $user->username;
     $_SESSION["userID"] = $user->userID;
     header('Location:views/categories_view.php');
@@ -23,14 +26,14 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 
 
 
-// $config->titleTag = 'Login RSS';
-// $config->metaDescription = 'Login Form for RSS';
-// $config->metaKeywords = 'Login Form for RSS';
+$config->titleTag = 'Login RSS';
+$config->metaDescription = 'Login Form for RSS';
+$config->metaKeywords = 'Login Form for RSS';
 
 //adds font awesome icons for arrows on pager
-// $config->loadhead .= '<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>';
-
-// get_header();
+$config->loadhead .= '<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>';
+$config->loadhead .= '<link rel="stylesheet" href="./styles/login.css" >';
+get_header();
 ?>
 <link rel="stylesheet" href="../styles/style.css">
 <div class="wrapper">
@@ -64,5 +67,5 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 
 
 <?php
-// get_footer();
+get_footer();
 ?>

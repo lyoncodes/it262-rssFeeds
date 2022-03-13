@@ -1,4 +1,5 @@
 <?php
+
 namespace NewsAggregator;
 
 include_once '../src/sessionStatus.php';
@@ -6,30 +7,30 @@ include_once '../src/validateUserSession.php';
 include_once "../DbModel/DB.php";
 
 use function NewsAggregator\helpers\check_session_status;
-use function NewsAggregator\helpers\validateSession;
+use function NewsAggregator\helpers\validateUserSession;
 
 use NewsAggregator\Database\Category;
-use NewsAggregator\Database\Feed;
 
-// require '../../inc_0700/config_inc.php';
-require '../config.php';
+require '../../inc_0700/config_inc.php';
+
 
 // check session status
-if(namespace\helpers\check_session_status() !== PHP_SESSION_ACTIVE) session_start();
+!check_session_status() && session_start();
 
 //check user login
-namespace\helpers\validateUserSession() ? $_SESSION["lastPageLoad"] = "now" : header('Location:login.php');
+validateUserSession() ? $_SESSION["lastPageLoad"] = "now" : header('Location:../login.php');
 
-// $config->loadhead .= '<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>';
-// get_header();
+$config->loadhead .= '<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>';
+$config->loadhead .= '<link rel="stylesheet" href="../styles/categories_view.css" >';
+get_header();
 
 $showSaveAction = null;
-// $saveActionMsg = null;
-// if (isset($_SESSION["saveSucceed"])) {
-//   $showSaveAction = $_SESSION["saveSucceed"];
-//   $saveActionMsg  = $_SESSION["saveMsg"];
-//   unset($_SESSION["saveSucceed"]);
-// }
+$saveActionMsg = null;
+if (isset($_SESSION["saveSucceed"])) {
+  $showSaveAction = $_SESSION["saveSucceed"];
+  $saveActionMsg  = $_SESSION["saveMsg"];
+  unset($_SESSION["saveSucceed"]);
+}
 
 
 $categories = Category::findByUserID($_SESSION["userID"]);
@@ -46,7 +47,6 @@ $categories = Category::findByUserID($_SESSION["userID"]);
 
   <?php endif; ?>
 
-  <!-- <?php print_r($_SESSION["lastPageLoad"])?> -->
   <?php foreach ($categories as $category) :
     $feeds = $category->feeds;
   ?>
@@ -54,7 +54,7 @@ $categories = Category::findByUserID($_SESSION["userID"]);
       <h1><?= ucfirst($category->title)  ?> </h1>
       <ul>
         <?php foreach ($feeds as $feed) : ?>
-          <li> <a href="feed_view.php?cid=<?= $category->categoryID ?>&fid=<?= $feed->feedID ?>"><?= $feed->name ?> </a> <span class="edit-action"> <a href="./feed_edit_view.php?cid=<?= $category->categoryID ?>&fid=<?= $feed->feedID ?>"><i class="far fa-edit"></i></a> </span> </li>
+          <li> <a href="./feed_view.php?cid=<?= $category->categoryID ?>&fid=<?= $feed->feedID ?>"><?= $feed->name ?> </a> <span class="edit-action"> <a href="./feed_edit_view.php?cid=<?= $category->categoryID ?>&fid=<?= $feed->feedID ?>"><i class="far fa-edit"></i></a> </span> </li>
         <?php endforeach; ?>
         <li><a class="add-action" href="./feed_edit_view.php?cid=<?= $category->categoryID ?>"><i class="far fa-plus-square"></i></a> </li>
       </ul>
@@ -63,5 +63,5 @@ $categories = Category::findByUserID($_SESSION["userID"]);
 </div>
 
 <?php
-// get_footer();
+get_footer();
 ?>

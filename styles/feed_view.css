@@ -1,0 +1,48 @@
+.header {
+  padding: 50px 0px;
+}
+
+.header p.navigation {
+  font-size: 18px;
+  font-weight: 600;
+  position: relative;
+}
+.header p.navigation a {
+  position: absolute;
+  right: 0px;
+}
+.cacheInfo span {
+  margin-right: 20px;
+  font-size: 16px;
+}
+
+.yes,
+.no {
+  font-weight: 600;
+}
+.yes {
+  color: green;
+}
+
+.no {
+  color: red;
+}
+
+.rss-item {
+  padding: 10px 0px;
+  border-bottom: 1px solid black;
+}
+.rss-item:hover {
+  background-color: rgba(215, 240, 255, 0.3);
+}
+.rss-item-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+.rss-description {
+  padding-left: 60px;
+}
+.rss-description ol {
+  margin: 0px;
+  padding: 0px;
+}

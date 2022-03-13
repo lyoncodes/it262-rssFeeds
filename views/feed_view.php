@@ -1,70 +1,78 @@
 <?php
 //check user login
 
-// require '../../inc_0700/config_inc.php';
-require '../config.php';
-
+include_once '../src/sessionStatus.php';
+include_once '../src/validateUserSession.php';
+include_once '../src/RSSCacheModel.php';
 include_once "../DbModel/DB.php";
-include_once "../src/formatURL.php";
 
-use NewsAggregator\Database\Category;
+use function NewsAggregator\helpers\check_session_status;
+use function NewsAggregator\helpers\validateUserSession;
+use NewsAggregator\helpers\RSSCacheModel;
 use NewsAggregator\Database\Feed;
-use function NewsAggregator\Database\formatURL;
+
+require '../../inc_0700/config_inc.php';
+
+
+// check session status
+!check_session_status() && session_start();
+
+//check user login
+validateUserSession() ? $_SESSION["lastPageLoad"] = "now" : header('Location:../login.php');
 
 // $config->loadhead .= '<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>';
-// get_header();
+$config->loadhead .= '<link rel="stylesheet" href="../styles/feed_view.css" >';
+get_header();
 
-$showSaveAction = null;
-// $saveActionMsg = null;
-// if (isset($_SESSION["saveSucceed"])) {
-//   $showSaveAction = $_SESSION["saveSucceed"];
-//   $saveActionMsg  = $_SESSION["saveMsg"];
-//   unset($_SESSION["saveSucceed"]);
-// }
-
-// function formatURL($strToParse){
-//   $strToParse = str_replace(' ', '+', $strToParse);
-//   $base_uri = 'https://news.google.com/rss/search?q=&hl=en-US&gl=US&ceid=US:en';
-//   $base_uri = str_replace('q=', 'q='.$strToParse.'', $base_uri);
-  
-//   return $base_uri;
-// }
 
 $feed = Feed::findByID($_GET['fid']);
-$url = formatURL($feed->name); // parse names, replacing spaces with +
-$response = file_get_contents($url); // fetch xml data
-$xml = simplexml_load_string($response); //create readable xml
+//wrong fid
+if ($feed == null) {
+  header('Location:./categories_view.php');
+}
+$category = $feed->category;
+//fetch rss 
+$RSSObj = RSSCacheModel::fetchRSSData($feed->name, $category->title);
 
 ?>
-<link rel="stylesheet" src="../styles/style.css">
+<!-- <link rel="stylesheet" src="../styles/style.css"> -->
 
 <div class="wrapper">
-
-  <?php if ($showSaveAction !== null) : ?>
-
-    <div class="myalert alert alert-dismissible <?= $showSaveAction ? "alert-success" : "alert-danger" ?>">
-      <strong><?= $showSaveAction ? "Well done!" : "Oh snap!" ?></strong> <a href="#" class="alert-link"><?= $saveActionMsg ?></a>.
-    </div>
-
-  <?php endif; ?>
-
-  <?php foreach($xml->channel->item as $feed) :
+  <div class="header">
+    <p class="navigation"> <?= ucfirst($category->title)  ?> -> <?= ucfirst($feed->name) ?> <a href="./categories_view.php">GO BACK</a> </p>
+    <p class="cacheInfo">
+      Data From Session:
+      <?php if ($RSSObj->inSesstion) : ?>
+        <span class="yes">YES</span>
+        <span>Cache time: <?= $RSSObj->cacheTime->format('m/d/Y H:i') ?></span>
+        <span>Expiration time: <?= $RSSObj->expiration->format('m/d/Y H:i') ?></span>
+        <span><a href='javascript:document.getElementById("myform").submit();'>clean & refresh</a></span>
+      <?php else : ?>
+        <span class="no">NO</span>
+      <?php endif; ?>
+    </p>
+  </div>
+  <div class="rss-container">
+    <?php $index = 1;
+    foreach ($RSSObj->xml->channel->item as $feedItem) : ?>
+      <div class="rss-item">
+        <p class="rss-item-title"><a target="_blank" href="<?= $feedItem->link ?>"><?= $index . ". " . $feedItem->title ?></a></p>
+        <p>pubDate: <span> <?= $feedItem->pubDate ?> </span></p>
+        <p>srource: <span> <?= $feedItem->source ?> </span></p>
+        <div class="rss-description">
+          <span> <?= $feedItem->description ?>
+        </div>
+      </div>
+    <?php $index++;
+    endforeach; ?>
+    <?php if (count($RSSObj->xml->channel->item) == 0) : ?>
+      <div class="no-data" style="text-align: center;color:red">
+        <i> NO DATA IN CURRENT FEED</i>
+      </div>
+    <?php endif; ?>
+  </div>
+  <form id="myform" action="feed_view.php?cid=<?= $category->categoryID ?>&fid=<?= $feed->feedID ?>" method="POST">
+  </form>
+  <?php
+  get_footer();
   ?>
-    <div class="feed">
-      <h4><?= ucfirst($feed->title)  ?> </h4>
-      <ul>
-        <li>
-          <a href="<?=$feed->link?>"><?=$feed->source?></a>
-        </li>
-        <!-- <?php foreach ($feeds as $feed) : ?>
-          <li> <a href="../index.php?cid=<?= $feed->feedID ?>&fid=<?= $feed->feedID ?>"><?= $feed->name ?> </a> <span class="edit-action"> <a href="./feed_edit_view.php?cid=<?= $feed->feedID ?>&fid=<?= $feed->feedID ?>"><i class="far fa-edit"></i></a> </span> </li>
-        <?php endforeach; ?> -->
-        <li><a class="add-action" href="./feed_edit_view.php?cid=<?= $feed->feedID ?>"><i class="far fa-plus-square"></i></a> </li>
-      </ul>
-    </div>
-  <?php endforeach; ?>
-</div>
-
-<?php
-// get_footer();
-?>
