@@ -32,9 +32,10 @@ if (isset($_SESSION["saveSucceed"])) {
   unset($_SESSION["saveSucceed"]);
 }
 
-
-$categories = Category::findByUserID($_SESSION["userID"]);
-
+//seach category by user id
+//$categories = Category::findByUserID($_SESSION["userID"]);
+//serch all categories
+$categories = Category::all();
 ?>
 <link rel="stylesheet" src="../styles/style.css">
 <div class="wrapper">

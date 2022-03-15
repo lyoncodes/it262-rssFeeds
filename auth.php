@@ -1,7 +1,8 @@
 <?php
+
 namespace NewsAggregator\Database;
 
-include 'config.php';
+require '../inc_0700/config_inc.php';
 include "./DbModel/DB.php";
 
 use NewsAggregator\Database\User;
@@ -9,13 +10,15 @@ use NewsAggregator\Database\User;
 $showSignUpError = false;
 if (isset($_POST["username"]) && isset($_POST["password"])) {
   $valid = User::signup($_POST["username"], $_POST["password"]);
-  if ($valid){
+  if ($valid) {
     $_SESSION["username"] = $_POST["username"];
     header('Location:login.php');
   }
 }
+$config->loadhead .= '<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>';
+$config->loadhead .= '<link rel="stylesheet" href="./styles/login.css" >';
+get_header();
 ?>
-<link rel="stylesheet" href="../styles/style.css">
 <div class="wrapper">
   <div class="title">
     <span>Sign Up Form</span>
@@ -32,7 +35,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
     <div class="row button">
       <input type="submit" value="Sign Up" />
       <div class="signup-link">
-        <a href="../login.php"> Back To Login</a>
+        <a href="login.php"> Back To Login</a>
       </div>
     </div>
   </form>
@@ -40,3 +43,6 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
     <p class="error-msg">wrong username or password, please check the <b>Hint</b></p>
   <?php endif; ?>
 </div>
+<?php
+get_footer();
+?>

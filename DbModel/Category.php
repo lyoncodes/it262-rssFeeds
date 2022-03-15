@@ -54,7 +54,18 @@ class Category
         $entities = DB::Query($SQL, "Category");
         return $entities;
     }
-
+    /**
+     * findByUserID
+     *
+     * @param   $id
+     * @return array of Category
+     */
+    public static function all()
+    {
+        $SQL = "select * from category";
+        $entities = DB::Query($SQL, "Category");
+        return $entities;
+    }
     /**
      * __get
      *

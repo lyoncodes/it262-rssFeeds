@@ -43,7 +43,7 @@ get_header();
   <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
     <div class="row">
       <i class="fas fa-user"></i>
-      <input type="text" placeholder="Username" name="username" required />
+      <input type="text" placeholder="Username" name="username" value="<?= isset($_SESSION["username"]) ? $_SESSION["username"] : "" ?>" required />
     </div>
     <div class="row">
       <i class="fas fa-lock"></i>
