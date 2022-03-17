@@ -34,11 +34,9 @@ if (isset($_SESSION["saveSucceed"])) {
 
 //seach category by user id
 $categories = Category::findByUserID($_SESSION["userID"]);
-print_r($categories);
 //serch all categories
 // $categories = Category::all();
 ?>
-<link rel="stylesheet" src="../styles/categories_view.css">
 <div class="wrapper">
 
   <?php if ($showSaveAction !== null) : ?>
@@ -48,9 +46,11 @@ print_r($categories);
     </div>
 
   <?php endif; ?>
-  <form id="newCat" action="new_category.php">
-    <input type="submit" value="New Category"></input>
-  </form>
+  <div class="row btn-row">
+    <form action="new_category.php">
+      <input class="btn btn-primary" type="submit" value="New Category"></input>
+    </form>
+  </div>
   <?php foreach ($categories as $category) :
     $feeds = $category->feeds;
   ?>
@@ -67,5 +67,5 @@ print_r($categories);
 </div>
 
 <?php
-// get_footer();
+get_footer();
 ?>

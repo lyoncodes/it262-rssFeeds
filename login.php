@@ -30,12 +30,12 @@ $config->titleTag = 'Login RSS';
 $config->metaDescription = 'Login Form for RSS';
 $config->metaKeywords = 'Login Form for RSS';
 
-//adds font awesome icons for arrows on pager
+// adds font awesome icons for arrows on pager
 $config->loadhead .= '<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>';
 $config->loadhead .= '<link rel="stylesheet" href="./styles/login.css" >';
 get_header();
 ?>
-<link rel="stylesheet" href="../styles/style.css">
+<link rel="stylesheet" href="../styles/login.css">
 <div class="wrapper">
   <div class="title">
     <span>Login Form</span>
@@ -67,5 +67,5 @@ get_header();
 
 
 <?php
-get_footer();
+// get_footer();
 ?>

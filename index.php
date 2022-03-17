@@ -1,7 +1,7 @@
 <?php
 namespace NewsAggregator;
 
-include_once 'src/sessionstatus.php';
+include_once 'src/sessionStatus.php';
 include_once 'src/validateUserSession.php';
 
 use function NewsAggregator\helpers\check_session_status;

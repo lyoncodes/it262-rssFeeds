@@ -67,6 +67,17 @@ class Category
         return $entities;
     }
     /**
+     * createCategory
+     * 
+     * 
+    */
+    public static function createCategory($id, $title)
+    {
+        $SQL = "INSERT INTO category VALUES(NULL, '$id', '$title')";
+        $entity = DB::execute($SQL, $id, $title);
+    }
+
+    /**
      * __get
      *
      * @param   $name
