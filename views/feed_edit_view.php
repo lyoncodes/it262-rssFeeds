@@ -1,12 +1,14 @@
 <?php
-//check user login
 
 require '../../inc_0700/config_inc.php';
+// require '../config.php';
+
 include_once "../DbModel/DB.php";
 
 use NewsAggregator\Database\Category;
 use NewsAggregator\Database\Feed;
 
+// check user login
 if (!isset($_SESSION["userID"])) {
     header('Location:../login.php');
     exit();

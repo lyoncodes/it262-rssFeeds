@@ -41,7 +41,6 @@ class User
     /**
      * signup
      * 
-     * 
      */
     public static function signup($username, $password)
     {

@@ -12,7 +12,7 @@ use function NewsAggregator\helpers\validateUserSession;
 use NewsAggregator\Database\Category;
 
 require '../../inc_0700/config_inc.php';
-
+// require '../config.php';
 
 // check session status
 !check_session_status() && session_start();
@@ -33,11 +33,10 @@ if (isset($_SESSION["saveSucceed"])) {
 }
 
 //seach category by user id
-//$categories = Category::findByUserID($_SESSION["userID"]);
+$categories = Category::findByUserID($_SESSION["userID"]);
 //serch all categories
-$categories = Category::all();
+// $categories = Category::all();
 ?>
-<link rel="stylesheet" src="../styles/style.css">
 <div class="wrapper">
 
   <?php if ($showSaveAction !== null) : ?>
@@ -47,7 +46,11 @@ $categories = Category::all();
     </div>
 
   <?php endif; ?>
-
+  <div class="row btn-row">
+    <form action="new_category.php">
+      <input class="btn btn-primary" type="submit" value="New Category"></input>
+    </form>
+  </div>
   <?php foreach ($categories as $category) :
     $feeds = $category->feeds;
   ?>
