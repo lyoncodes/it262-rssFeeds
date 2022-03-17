@@ -12,6 +12,8 @@ use NewsAggregator\helpers\RSSCacheModel;
 use NewsAggregator\Database\Feed;
 
 require '../../inc_0700/config_inc.php';
+// require '../config.php';
+
 
 
 // check session status
@@ -20,7 +22,7 @@ require '../../inc_0700/config_inc.php';
 //check user login
 validateUserSession() ? $_SESSION["lastPageLoad"] = "now" : header('Location:../login.php');
 
-// $config->loadhead .= '<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>';
+$config->loadhead .= '<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>';
 $config->loadhead .= '<link rel="stylesheet" href="../styles/feed_view.css" >';
 get_header();
 
